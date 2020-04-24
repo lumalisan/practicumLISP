@@ -1,18 +1,3 @@
-(defun paralelepipedo (x1 y1 x2 y2)
-	(move x1 y1)
-	(draw x1 y2 x2 y2 x2 y1 x1 y1)
-)
-
-(defun paralelepipedoRelleno (r g b x1 y1 x2 y2)
-	(color r g b)
-	(paralelepipedo x1 y1 x2 y2)
-	(dotimes (i (- y2 y1))
-		(move x1 (+ i y1))
-		(draw x2 (+ i y1))
-	)
-	(color 0 0 0)
-)
-
 (defun VISUALIZADORCOLOR200 (imagen a z)
 	(setq fichero (open imagen :direction :input
 	:element-type 'unsigned-byte))
@@ -149,31 +134,139 @@
 	(princ (read-line fichero nil))
 )
 
+(defun ficheroPedido (nombre)
+	(setq fichero (open nombre :direction :output))
+	(setq a (read))
+	(setq dim (length a))
+
+	(loop
+		(if (= dim 0) (return))
+		(princ a fichero)
+		(write-char #\newline fichero)
+		(setq a (read))
+		(setq dim (length a))
+	)
+					(close fichero)
+)
+
+;coger el nombre y el precio del producto desde el fichero (WIP)
+; https://www.tutorialspoint.com/lisp/lisp_strings.htm
+;(defun cogerProducto (nProducto nombre precio)
+	;(setq fichero (open "docs/productos.txt" :direction :input))
+	;(dotimes (i nProducto)
+	;	(setq lectura (read-line fichero nil))
+	;)
+	;(setq cadena1 (format t "~d. " nProducto))
+	;(setq tabulador "\t")
+	;(setq trim (string-trim cadena1 lectura))
+	;(setq trim1 (string-left-trim tabulador trim))
+	;(goto-xy 1 15)
+	;(print cadena1)
+	;(print trim)
+	;(print trim1)
+	;(setq nombre trim1)
+	;(setq precio (caddr lectura))
+;)
+
 (defun dibujarInterfaz ()
 	(cls)
 	(visualizarListaProductos)
-	(goto-xy 1 23)
-	;(cleol)
-	(princ "[] INICIAR PEDIDO (S/N): ")
-	(goto-xy 0 15)
-	(princ "NO FUK U")
-	(paralelepipedorelleno 0 0 0 5 335 435 375)
-	(paralelepipedo 5 175 435 330)
-	(paralelepipedorelleno 0 0 0 5 138 635 173)
-	(paralelepipedo 5 35 635 135)
-	(paralelepipedo 5 0 330 30)
-	(paralelepipedorelleno 0 0 0 330 0 635 30)
-	(cargarFotos)
 )
 
 (defun inicio ()
 	(dibujarInterfaz)
-	(cargarLetrasPedido)
-	(cargarLetrasTotal)
+	;(cargarLetrasPedido)
+	;(cargarLetrasTotal)
+
+	(loop
+	;INICIO
+	(goto-xy 1 23)
+	(cleol)
+	(princ "[] INICIAR PEDIDO (S/N): ")
 	(setq entrada (read))
-	(if (not (string-equal entrada "S"))(return())) ;si no es "S"
+	(if (string-equal entrada "S") (return()))
+	) ;Acaba el loop
+
+	;NUMERO DE PEDIDO
 	(goto-xy 1 23)
 	(cleol)
 	(princ "[] NUMERO DE PEDIDO: ")
 	(setq nPedido (read))
+
+	;DISPLAY DE NUMERO DE PEDIDO EN PANTALLA
+
+	(setq total 0)
+	(setq carrito 0)
+	(setq columna 0)
+	(setq fila 0)
+
+	(loop
+	;NUMERO DE PRODUCTO
+	(goto-xy 1 23)
+	(cleol)
+	(princ "[] NUMERO DE PRODUCTO: ")
+	(setq nProducto (read))
+	(case nProducto
+		(1 (setq nombre "MASCARILLA") (setq precio 10.00))
+		(2 (setq nombre "JABON") (setq precio 05.00))
+		(3 (setq nombre "PASTA") (setq precio 02.39))
+		(4 (setq nombre "CERVEZA") (setq precio 03.69))
+		(5 (setq nombre "FRESAS") (setq precio 02.56))
+		(6 (setq nombre "ARROZ") (setq precio 69.05))
+		(7 (setq nombre "AGUACATE") (setq precio 02.78))
+		(8 (setq nombre "ACEITE") (setq precio 01.98))
+		(9 (setq nombre "AZUCAR") (setq precio 01.34))
+		(10 (setq nombre "GALLETAS") (setq precio 03.78))
+		(11 (setq nombre "SALSA") (setq precio 04.32))
+		(12 (setq nombre "VINAGRE") (setq precio 05.65))
+		(13 (setq nombre "AGUA") (setq precio 15.76))
+		(14 (setq nombre "VINO") (setq precio 36.34))
+		(15 (setq nombre "CAFE") (setq precio 05.86))
+		(16 (setq nombre "CEREALES") (setq precio 04.67))
+		(17 (setq nombre "GARBANZOS") (setq precio 01.23))
+		(18 (setq nombre "ALUBIAS") (setq precio 02.56))
+		(19 (setq nombre "HARINA") (setq precio 00.47))
+		(20 (setq nombre "COMINO") (setq precio 07.14))
+	)
+
+	;PREGUNTAR UNIDADES
+	(goto-xy 1 23)
+	(cleol)
+	(format t "[] UNIDADES ~s: " nombre)
+	(setq unidades (read))
+
+	;CONFIRMACION DE UNIDADES + SUMA AL TOTAL + DISPLAY EN PANTALLA
+	(goto-xy 1 23)
+	(cleol)
+	(format t "[] ~d DE ~s (S/N): " unidades nombre)
+	(setq confirmacion (read))
+	(cond ((string-equal confirmacion "S")
+		(setq total (+ total (* unidades precio)))
+		(goto-xy (+ 1 columna) (+ 15 fila))
+		(setq columna (+ 27 columna))
+		(setq carrito (+ 1 carrito))
+		(format t "[~s/~d/~d]" nombre unidades (* precio unidades))
+		(cond ((= carrito 3)
+			(setq carrito 0)
+			(setq columna 0)
+			(setq fila (+ fila 1))
+		))
+	))
+
+	;CONTINUAR CON EL PEDIDO?
+	(goto-xy 1 23)
+	(cleol)
+	(princ "[] CONTINUAR PEDIDO (S/N): ")
+	(setq continuar (read))
+	(if (string-equal continuar "N") (return()))
+	) ;Acaba el loop
+
+	;CREAR FICHERO PEDIDO
+	(setq nombre (format t "pedido~d.txt" nPedido))
+	(ficheroPedido nombre)
+
+	;FINALIZACION
+	(goto-xy 1 23)
+	(cleol)
+	(princ "[] EL PEDIDO HA SIDO GUARDADO CORRECTAMENTE")
 )

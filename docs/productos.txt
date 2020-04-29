@@ -1,20 +1,20 @@
 01. mascarilla		10,00
-02. jabon			05,00
-03. pasta		02,39
-04. cerveza		03,69
+02. jabon manos	05,00
+03. pasta gallo	02,39
+04. cerveza	03,69
 05. fresas		02,56
-06. arroz			69,05
+06. arroz sos	69,05
 07. aguacate		02,78
-08. aceite		01,98
+08. aceite	01,98
 09. azucar		01,34
-10. galletas		03,78
-11. salsa		04,32
-12. vinagre		05,65
-13. agua		15,76
-14. vino			36,34
-15. cafe		05,86
-16. cereales		04,67
+10. galletas	03,78
+11. salsa soja		04,32
+12. vinagre	05,65
+13. agua gas		15,76
+14. vino tinto	36,34
+15. cafe negro		05,86
+16. cereales	04,67
 17. garbanzos		01,23
-18. alubias		02,56
+18. alubias	02,56
 19. harina		00,47
-20. comino		07,14
+20. comino	07,14

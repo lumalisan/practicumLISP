@@ -1,8 +1,10 @@
+; Dibuja un paralelepipedo en las coordenadas especificadas
 (defun paralelepipedo (x1 y1 x2 y2)
 	(move x1 y1)
 	(draw x1 y2 x2 y2 x2 y1 x1 y1)
 )
 
+; Dibuja un paralelepipedo del color con componentes R G B en las coordenadas especificadas
 (defun paralelepipedoRelleno (r g b x1 y1 x2 y2)
 	(color r g b)
 	(paralelepipedo x1 y1 x2 y2)
@@ -10,37 +12,43 @@
 		(move x1 (+ i y1))
 		(draw x2 (+ i y1))
 	)
-	(color 0 0 0)
+	(color 0 0 0)	; Reset del color
 )
 
+; Abre la imagen desde el fichero especificado y la pinta en las coordenadas A Z
+; La imagen tiene tamaño de 200 x 200 pixeles (imagenes de producto)
 (defun VISUALIZADORCOLOR200 (imagen a z)
 	(setq fichero (open imagen :direction :input
 	:element-type 'unsigned-byte))
-	(setq pixel 1)
-	(setq B 0)
-	(setq G 0)
-	(setq R 0)
-	(setq x a)
-	(setq y z)
+	(setq pixel 1)	; Index del pixel actual
+	(setq B 0)		; Componente azul
+	(setq G 0)		; Componente verde
+	(setq R 0)		; Compomente roja
+	(setq x a)		; Coordenada X
+	(setq y z)		; Coordenada Y
 	(move x y)
-	(loop
+	(loop			; Leemos 3 bytes del fichero: B (azul), G (verde) y R (rojo)
 		(setq B (read-byte fichero nil))
 		(if (null B) (return ()))
 		(setq G (read-byte fichero nil))
 		(if (null G) (return ()))
 		(setq R (read-byte fichero nil))
 		(if (null R) (return ()))
-		(color R G B)
+		(color R G B)		; Set del color según los valores leidos
 		(draw (+ 1 x) y)
 		(setq pixel (+ pixel 1))
 		(setq x (+ x 1))
+		; Una vez llegado a 200 pixeles, resetea la X y pasa a la linea siguiente
 		(cond  ((> pixel 200) (setq pixel 1) (setq x a) (setq y (+ y 1)) ) )
 		(move x y)
 	)
-	(color 0 0 0)
+	(color 0 0 0)		; Reset del color
        (close fichero)
 )
 
+
+; Abre la imagen desde el fichero especificado y la pinta en las coordenadas A Z
+; La imagen tiene tamaño de 20 x 20 pixeles (letras)
 (defun VISUALIZADORCOLOR20 (imagen a z)
 	(setq fichero (open imagen :direction :input
 	:element-type 'unsigned-byte))
@@ -62,6 +70,7 @@
 		(draw (+ 1 x) y)
 		(setq pixel (+ pixel 1))
 		(setq x (+ x 1))
+		; Una vez llegado a 20 pixeles, resetea la X y pasa a la linea siguiente
 		(cond  ((> pixel 20) (setq pixel 1) (setq x a) (setq y (+ y 1)) ) )
 		(move x y)
 	)
@@ -69,6 +78,7 @@
        (close fichero)
 )
 
+; Visualiza las imagenes de la interfaz: Logo y letras 'PRODUCTO'
 (defun cargarFotos ()
 	(VISUALIZADORCOLOR200 "fotos/LogoPractica.img" 440 175)
 	(VISUALIZADORCOLOR20 "fotos/P_NB.img" 90 345)
@@ -82,6 +92,7 @@
 	(VISUALIZADORCOLOR20 "fotos/S_NB.img" 330 345)
 )
 
+; Visualiza las imagenes de la interfaz: Indicador de pedido
 (defun cargarLetrasPedido (numPedido)
 	(VISUALIZADORCOLOR20 "fotos/P_NB.img" 10 145)
 	(VISUALIZADORCOLOR20 "fotos/E_NB.img" 31 145)
@@ -97,19 +108,21 @@
 	(mostrarPedido numPedido)
 )
 
+; Visualiza el número de pedido actual
 (defun mostrarPedido (numPedido)
-		(setq s (princ-to-string numPedido))
+		(setq s (princ-to-string numPedido))	; Guardamos número de pedido
 
+		; Cogemos solo el número
 		(setq lista (list (subseq s 0 1)))
 
 		(dotimes (n (- (length s) 1))
 		    (setq lista (append lista (list (subseq s (+ n 1) (+ n 2)))))
 		)
 
-		(setq x 136)
+		(setq x 136)	; Coorenada donde irá el número
 
 		(dotimes (n (length s) x)
-		    (cond
+		    (cond		; Carga la imagen apropiada según el número
 		        ((string-equal "0" (car lista)) (cargarFotoNumero 0 (+ x 21) 145))
 		        ((string-equal "1" (car lista)) (cargarFotoNumero 1 (+ x 21) 145))
 		        ((string-equal "2" (car lista)) (cargarFotoNumero 2 (+ x 21) 145))
@@ -125,6 +138,7 @@
 		)
 )
 
+; Visualiza las imagenes de la interfaz: Indicador de importe total
 (defun cargarLetrasTotal (total)
 	(VISUALIZADORCOLOR20 "fotos/T_NB.img" 334 5)
 	(VISUALIZADORCOLOR20 "fotos/O_NB.img" 355 5)
@@ -138,9 +152,11 @@
 	(mostrarTotal total)
 )
 
+; Visualiza el importe del pedido actual
 (defun mostrarTotal (total)
-		(setq s (princ-to-string total))
+		(setq s (princ-to-string total))	; Guardamos el total
 
+		; Cogemos solo el número
 		(setq lista (list (subseq s 0 1)))
 
 		(dotimes (n (- (length s) 1))
@@ -169,6 +185,7 @@
 		)
 )
 
+; Visualiza la imagen con el número especificado en las coordenadas X Y
 (defun cargarFotoNumero (num x y)
 		(case num
 			(0 (VISUALIZADORCOLOR20 "fotos/0_NB.img" x y))
@@ -185,6 +202,7 @@
 		)
 )
 
+; Visualiza la imagen del producto según su número
 (defun cargarFotoProducto (numProd)
 		(case numProd
 			(1 (VISUALIZADORCOLOR200 "fotos/mascarilla.img" 440 175))
@@ -210,6 +228,7 @@
 		)
 )
 
+; Lee la lista de productos desde el fichero y los visualiza en la interfaz
 (defun visualizarListaProductos ()
 	(setq fichero (open "docs/productos.txt" :direction :input))
 	(goto-xy 1 3)
@@ -254,6 +273,7 @@
 	(princ (read-line fichero nil))
 )
 
+; Prepara la interfaz
 (defun dibujarInterfaz ()
 	(paralelepipedorelleno 0 0 0 5 335 435 375)
 	(paralelepipedo 5 175 435 330)
@@ -263,12 +283,14 @@
 	(paralelepipedorelleno 0 0 0 330 0 635 30)
 )
 
+; Prepara la interfaz inferior
 (defun dibujarInterfazInferior ()
 	(paralelepipedo 5 35 635 135)
 	(paralelepipedo 5 0 330 30)
 	(paralelepipedorelleno 0 0 0 330 0 635 30)
 )
 
+; Escribe los contenidos del pedido y el total en un fichero
 (defun ficheroPedido (nombre nPedido listaPedidos nDeProductos total)
 	(setq fichero (open nombre :direction :output))
 	(setq aux (format nil "PEDIDO ~d\n" nPedido))
@@ -286,6 +308,7 @@
 					(close fichero)
 )
 
+; Main
 (defun inicio ()
 	(cls)
 	(visualizarListaProductos)

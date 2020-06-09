@@ -1,3 +1,8 @@
+# Convertidor de BMP a IMG - Versión GUI
+# Práctica no presencial LISP - Curso 2019/2020
+# Izar Castorina y Lisandro Rocha
+
+
 import os
 from tkinter import *
 from tkinter import filedialog
@@ -6,13 +11,6 @@ from tkinter import messagebox
 files = []
 initdir = os.getcwd()
 savedir = initdir
-
-# TODO
-# - Checkbox para elim. de los ficheros originales
-# - Conversión de BMPs a más de 8 bits
-# - Detección automatica de los bits en los BMPs
-# - Visualizar informaciones sobre los files y preview
-# - Soportar otros tipos de ficheros imagen
 
 
 def abreImagen():

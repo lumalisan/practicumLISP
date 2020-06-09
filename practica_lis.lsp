@@ -38,7 +38,8 @@
 		(draw (+ 1 x) y)
 		(setq pixel (+ pixel 1))
 		(setq x (+ x 1))
-		(cond  ((> pixel 200) (setq pixel 1) (setq x a) (setq y (+ y 1)) ) ) ; Una vez llegado a 200 pixeles, resetea la X y pasa a la linea siguiente
+		; Una vez llegado a 200 pixeles, resetea la X y pasa a la linea siguiente
+		(cond  ((> pixel 200) (setq pixel 1) (setq x a) (setq y (+ y 1)) ) )
 		(move x y)
 	)
 	(color 0 0 0)		; Reset del color
@@ -69,7 +70,8 @@
 		(draw (+ 1 x) y)
 		(setq pixel (+ pixel 1))
 		(setq x (+ x 1))
-		(cond  ((> pixel 20) (setq pixel 1) (setq x a) (setq y (+ y 1)) ) ) ; Una vez llegado a 20 pixeles, resetea la X y pasa a la linea siguiente
+		; Una vez llegado a 20 pixeles, resetea la X y pasa a la linea siguiente
+		(cond  ((> pixel 20) (setq pixel 1) (setq x a) (setq y (+ y 1)) ) )
 		(move x y)
 	)
 	(color 0 0 0)
